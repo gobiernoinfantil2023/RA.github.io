@@ -3,97 +3,375 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Galería AR Inmersiva</title>
+    <title>AR Video Experience</title>
     <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
-    <style>
-        body { margin: 0; overflow: hidden; }
-    </style>
 </head>
 <body>
-    <a-scene 
-        mindar-image="imageTargetSrc: ./galeria.mind; autoStart: true; uiLoading: no; uiError: no; uiScanning: no;" 
-        vr-mode-ui="enabled: false" 
-        device-orientation-permission-ui="enabled: false" 
-        renderer="colorManagement: true;">
-        
+    <a-scene mindar-image="imageTargetSrc: ./abuela.mind; autoStart: false; uiError:no; uiLoading:no; uiScanning:no;" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false" renderer="colorManagement: true;">
         <a-assets>
-            <video id="vid-generaciones" src="./generaciones.mp4" loop muted playsinline crossorigin="anonymous"></video>
-            <video id="vid-abuela" src="./abuela.mp4" loop muted playsinline crossorigin="anonymous"></video>
-            <video id="vid-adn" src="./adn.mp4" loop muted playsinline crossorigin="anonymous"></video>
-            <video id="vid-ciencia" src="./ciencia.mp4" loop muted playsinline crossorigin="anonymous"></video>
-            <video id="vid-familia" src="./familia.mp4" loop muted playsinline crossorigin="anonymous"></video>
-            <video id="vid-garabatos" src="./garabatos.mp4" loop muted playsinline crossorigin="anonymous"></video>
-            <video id="vid-hermanas" src="./hermanas.mp4" loop muted playsinline crossorigin="anonymous"></video>
-            <video id="vid-hermanos" src="./hermanos.mp4" loop muted playsinline crossorigin="anonymous"></video>
-            <video id="vid-juicio" src="./juicio.mp4" loop muted playsinline crossorigin="anonymous"></video>
-            <video id="vid-regalo" src="./regalo.mp4" loop muted playsinline crossorigin="anonymous"></video>
-            <video id="vid-resolucion" src="./resolucion.mp4" loop muted playsinline crossorigin="anonymous"></video>
+            <video id="ar-video" src="./abuela.mp4" loop muted playsinline crossorigin="anonymous"></video>
+            
         </a-assets>
         
-        <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+        <a-camera position="0 0 0" look-controls="enabled: false" cursor="fuse: false; rayOrigin: mouse;" raycaster="near: 10; far: 10000; objects: .clickable"></a-camera>
 
-        <a-entity mindar-image-target="targetIndex: 0" class="ar-target" data-video="#vid-generaciones">
-            <a-plane src="#vid-generaciones" position="0 0 0" height="1" width="1.77"></a-plane>
-        </a-entity>
-
-        <a-entity mindar-image-target="targetIndex: 1" class="ar-target" data-video="#vid-abuela">
-            <a-plane src="#vid-abuela" position="0 0 0" height="1" width="1.77"></a-plane>
-        </a-entity>
-
-        <a-entity mindar-image-target="targetIndex: 2" class="ar-target" data-video="#vid-adn">
-            <a-plane src="#vid-adn" position="0 0 0" height="1" width="1.77"></a-plane>
-        </a-entity>
-
-        <a-entity mindar-image-target="targetIndex: 3" class="ar-target" data-video="#vid-ciencia">
-            <a-plane src="#vid-ciencia" position="0 0 0" height="1" width="1.77"></a-plane>
-        </a-entity>
-
-        <a-entity mindar-image-target="targetIndex: 4" class="ar-target" data-video="#vid-familia">
-            <a-plane src="#vid-familia" position="0 0 0" height="1" width="1.77"></a-plane>
-        </a-entity>
-
-        <a-entity mindar-image-target="targetIndex: 5" class="ar-target" data-video="#vid-garabatos">
-            <a-plane src="#vid-garabatos" position="0 0 0" height="1" width="1.77"></a-plane>
-        </a-entity>
-
-        <a-entity mindar-image-target="targetIndex: 6" class="ar-target" data-video="#vid-hermanas">
-            <a-plane src="#vid-hermanas" position="0 0 0" height="1" width="1.77"></a-plane>
-        </a-entity>
-
-        <a-entity mindar-image-target="targetIndex: 7" class="ar-target" data-video="#vid-hermanos">
-            <a-plane src="#vid-hermanos" position="0 0 0" height="1" width="1.77"></a-plane>
-        </a-entity>
-
-        <a-entity mindar-image-target="targetIndex: 8" class="ar-target" data-video="#vid-juicio">
-            <a-plane src="#vid-juicio" position="0 0 0" height="1" width="1.77"></a-plane>
-        </a-entity>
-
-        <a-entity mindar-image-target="targetIndex: 9" class="ar-target" data-video="#vid-regalo">
-            <a-plane src="#vid-regalo" position="0 0 0" height="1" width="1.77"></a-plane>
-        </a-entity>
-
-        <a-entity mindar-image-target="targetIndex: 10" class="ar-target" data-video="#vid-resolucion">
-            <a-plane src="#vid-resolucion" position="0 0 0" height="1" width="1.77"></a-plane>
-        </a-entity>
-
-    </a-scene>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const targets = document.querySelectorAll('.ar-target');
+        <a-entity id="ar-target" mindar-image-target="targetIndex: 0">
+            <a-plane
+                src="#ar-video"
+                position="0 0 0"
+                rotation="0 0 0"
+                height="1"
+                width="1.4285714285714286"
+            ></a-plane>
             
-            targets.forEach(target => {
-                const videoSelector = target.getAttribute('data-video');
-                const video = document.querySelector(videoSelector);
-
-                target.addEventListener('targetFound', () => {
-                    video.play();
+        </a-entity>
+    </a-scene>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const arTarget = document.querySelector('#ar-target');
+            const video = document.querySelector('#ar-video');
+            arTarget.addEventListener('targetFound', () => { 
+                video.play().catch(e => console.error("Video play failed", e)); 
+            });
+            arTarget.addEventListener('targetLost', () => { 
+                video.pause(); 
+            });
+        });
+    </script>
+    <body>
+        <a-scene mindar-image="imageTargetSrc: ./generaciones.mind; autoStart: false; uiError:no; uiLoading:no; uiScanning:no;" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false" renderer="colorManagement: true;">
+            <a-assets>
+                <video id="ar-video" src="./generaciones.mp4" loop muted playsinline crossorigin="anonymous"></video>
+                
+            </a-assets>
+            
+            <a-camera position="0 0 0" look-controls="enabled: false" cursor="fuse: false; rayOrigin: mouse;" raycaster="near: 10; far: 10000; objects: .clickable"></a-camera>
+    
+            <a-entity id="ar-target" mindar-image-target="targetIndex: 0">
+                <a-plane
+                    src="#ar-video"
+                    position="0 0 0"
+                    rotation="0 0 0"
+                    height="1"
+                    width="1.4285714285714286"
+                ></a-plane>
+                
+            </a-entity>
+        </a-scene>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const arTarget = document.querySelector('#ar-target');
+                const video = document.querySelector('#ar-video');
+                arTarget.addEventListener('targetFound', () => { 
+                    video.play().catch(e => console.error("Video play failed", e)); 
                 });
-
-                target.addEventListener('targetLost', () => {
-                    video.pause();
+                arTarget.addEventListener('targetLost', () => { 
+                    video.pause(); 
                 });
+            });
+        </script>
+    <body>
+        <a-scene mindar-image="imageTargetSrc: ./adn.mind; autoStart: false; uiError:no; uiLoading:no; uiScanning:no;" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false" renderer="colorManagement: true;">
+            <a-assets>
+                <video id="ar-video" src="./adn.mp4" loop muted playsinline crossorigin="anonymous"></video>
+                
+            </a-assets>
+            
+            <a-camera position="0 0 0" look-controls="enabled: false" cursor="fuse: false; rayOrigin: mouse;" raycaster="near: 10; far: 10000; objects: .clickable"></a-camera>
+    
+            <a-entity id="ar-target" mindar-image-target="targetIndex: 0">
+                <a-plane
+                    src="#ar-video"
+                    position="0 0 0"
+                    rotation="0 0 0"
+                    height="1"
+                    width="1.4285714285714286"
+                ></a-plane>
+                
+            </a-entity>
+        </a-scene>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const arTarget = document.querySelector('#ar-target');
+                const video = document.querySelector('#ar-video');
+                arTarget.addEventListener('targetFound', () => { 
+                    video.play().catch(e => console.error("Video play failed", e)); 
+                });
+                arTarget.addEventListener('targetLost', () => { 
+                    video.pause(); 
+                });
+            });
+        </script>
+    <body>
+        <a-scene mindar-image="imageTargetSrc: ./ciencia.mind; autoStart: false; uiError:no; uiLoading:no; uiScanning:no;" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false" renderer="colorManagement: true;">
+            <a-assets>
+                <video id="ar-video" src="./ciencia.mp4" loop muted playsinline crossorigin="anonymous"></video>
+                
+            </a-assets>
+            
+            <a-camera position="0 0 0" look-controls="enabled: false" cursor="fuse: false; rayOrigin: mouse;" raycaster="near: 10; far: 10000; objects: .clickable"></a-camera>
+    
+            <a-entity id="ar-target" mindar-image-target="targetIndex: 0">
+                <a-plane
+                    src="#ar-video"
+                    position="0 0 0"
+                    rotation="0 0 0"
+                    height="1"
+                    width="1.4285714285714286"
+                ></a-plane>
+                
+            </a-entity>
+        </a-scene>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const arTarget = document.querySelector('#ar-target');
+                const video = document.querySelector('#ar-video');
+                arTarget.addEventListener('targetFound', () => { 
+                    video.play().catch(e => console.error("Video play failed", e)); 
+                });
+                arTarget.addEventListener('targetLost', () => { 
+                    video.pause(); 
+                });
+            });
+        </script>
+    <body>
+        <a-scene mindar-image="imageTargetSrc: ./familia.mind; autoStart: false; uiError:no; uiLoading:no; uiScanning:no;" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false" renderer="colorManagement: true;">
+            <a-assets>
+                <video id="ar-video" src="./familia.mp4" loop muted playsinline crossorigin="anonymous"></video>
+                
+            </a-assets>
+            
+            <a-camera position="0 0 0" look-controls="enabled: false" cursor="fuse: false; rayOrigin: mouse;" raycaster="near: 10; far: 10000; objects: .clickable"></a-camera>
+    
+            <a-entity id="ar-target" mindar-image-target="targetIndex: 0">
+                <a-plane
+                    src="#ar-video"
+                    position="0 0 0"
+                    rotation="0 0 0"
+                    height="1"
+                    width="1.4285714285714286"
+                ></a-plane>
+                
+            </a-entity>
+        </a-scene>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const arTarget = document.querySelector('#ar-target');
+                const video = document.querySelector('#ar-video');
+                arTarget.addEventListener('targetFound', () => { 
+                    video.play().catch(e => console.error("Video play failed", e)); 
+                });
+                arTarget.addEventListener('targetLost', () => { 
+                    video.pause(); 
+                });
+            });
+        </script>
+    <body>
+        <a-scene mindar-image="imageTargetSrc: ./garabatos.mind; autoStart: false; uiError:no; uiLoading:no; uiScanning:no;" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false" renderer="colorManagement: true;">
+            <a-assets>
+                <video id="ar-video" src="./garabatos.mp4" loop muted playsinline crossorigin="anonymous"></video>
+                
+            </a-assets>
+            
+            <a-camera position="0 0 0" look-controls="enabled: false" cursor="fuse: false; rayOrigin: mouse;" raycaster="near: 10; far: 10000; objects: .clickable"></a-camera>
+    
+            <a-entity id="ar-target" mindar-image-target="targetIndex: 0">
+                <a-plane
+                    src="#ar-video"
+                    position="0 0 0"
+                    rotation="0 0 0"
+                    height="1"
+                    width="1.4285714285714286"
+                ></a-plane>
+                
+            </a-entity>
+        </a-scene>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const arTarget = document.querySelector('#ar-target');
+                const video = document.querySelector('#ar-video');
+                arTarget.addEventListener('targetFound', () => { 
+                    video.play().catch(e => console.error("Video play failed", e)); 
+                });
+                arTarget.addEventListener('targetLost', () => { 
+                    video.pause(); 
+                });
+            });
+        </script>
+    <body>
+        <a-scene mindar-image="imageTargetSrc: ./hermanas.mind; autoStart: false; uiError:no; uiLoading:no; uiScanning:no;" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false" renderer="colorManagement: true;">
+            <a-assets>
+                <video id="ar-video" src="./hermanas.mp4" loop muted playsinline crossorigin="anonymous"></video>
+                
+            </a-assets>
+            
+            <a-camera position="0 0 0" look-controls="enabled: false" cursor="fuse: false; rayOrigin: mouse;" raycaster="near: 10; far: 10000; objects: .clickable"></a-camera>
+    
+            <a-entity id="ar-target" mindar-image-target="targetIndex: 0">
+                <a-plane
+                    src="#ar-video"
+                    position="0 0 0"
+                    rotation="0 0 0"
+                    height="1"
+                    width="1.4285714285714286"
+                ></a-plane>
+                
+            </a-entity>
+        </a-scene>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const arTarget = document.querySelector('#ar-target');
+                const video = document.querySelector('#ar-video');
+                arTarget.addEventListener('targetFound', () => { 
+                    video.play().catch(e => console.error("Video play failed", e)); 
+                });
+                arTarget.addEventListener('targetLost', () => { 
+                    video.pause(); 
+                });
+            });
+        </script>
+    <body>
+        <a-scene mindar-image="imageTargetSrc: ./hermanos.mind; autoStart: false; uiError:no; uiLoading:no; uiScanning:no;" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false" renderer="colorManagement: true;">
+            <a-assets>
+                <video id="ar-video" src="./hermanos.mp4" loop muted playsinline crossorigin="anonymous"></video>
+                
+            </a-assets>
+            
+            <a-camera position="0 0 0" look-controls="enabled: false" cursor="fuse: false; rayOrigin: mouse;" raycaster="near: 10; far: 10000; objects: .clickable"></a-camera>
+    
+            <a-entity id="ar-target" mindar-image-target="targetIndex: 0">
+                <a-plane
+                    src="#ar-video"
+                    position="0 0 0"
+                    rotation="0 0 0"
+                    height="1"
+                    width="1.4285714285714286"
+                ></a-plane>
+                
+            </a-entity>
+        </a-scene>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const arTarget = document.querySelector('#ar-target');
+                const video = document.querySelector('#ar-video');
+                arTarget.addEventListener('targetFound', () => { 
+                    video.play().catch(e => console.error("Video play failed", e)); 
+                });
+                arTarget.addEventListener('targetLost', () => { 
+                    video.pause(); 
+                });
+            });
+        </script>
+    <body>
+        <a-scene mindar-image="imageTargetSrc: ./juicio.mind; autoStart: false; uiError:no; uiLoading:no; uiScanning:no;" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false" renderer="colorManagement: true;">
+            <a-assets>
+                <video id="ar-video" src="./juicio.mp4" loop muted playsinline crossorigin="anonymous"></video>
+                
+            </a-assets>
+            
+            <a-camera position="0 0 0" look-controls="enabled: false" cursor="fuse: false; rayOrigin: mouse;" raycaster="near: 10; far: 10000; objects: .clickable"></a-camera>
+    
+            <a-entity id="ar-target" mindar-image-target="targetIndex: 0">
+                <a-plane
+                    src="#ar-video"
+                    position="0 0 0"
+                    rotation="0 0 0"
+                    height="1"
+                    width="1.4285714285714286"
+                ></a-plane>
+                
+            </a-entity>
+        </a-scene>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const arTarget = document.querySelector('#ar-target');
+                const video = document.querySelector('#ar-video');
+                arTarget.addEventListener('targetFound', () => { 
+                    video.play().catch(e => console.error("Video play failed", e)); 
+                });
+                arTarget.addEventListener('targetLost', () => { 
+                    video.pause(); 
+                });
+            });
+        </script>
+    <body>
+        <a-scene mindar-image="imageTargetSrc: ./regalo.mind; autoStart: false; uiError:no; uiLoading:no; uiScanning:no;" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false" renderer="colorManagement: true;">
+            <a-assets>
+                <video id="ar-video" src="./regalo.mp4" loop muted playsinline crossorigin="anonymous"></video>
+                
+            </a-assets>
+            
+            <a-camera position="0 0 0" look-controls="enabled: false" cursor="fuse: false; rayOrigin: mouse;" raycaster="near: 10; far: 10000; objects: .clickable"></a-camera>
+    
+            <a-entity id="ar-target" mindar-image-target="targetIndex: 0">
+                <a-plane
+                    src="#ar-video"
+                    position="0 0 0"
+                    rotation="0 0 0"
+                    height="1"
+                    width="1.4285714285714286"
+                ></a-plane>
+                
+            </a-entity>
+        </a-scene>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const arTarget = document.querySelector('#ar-target');
+                const video = document.querySelector('#ar-video');
+                arTarget.addEventListener('targetFound', () => { 
+                    video.play().catch(e => console.error("Video play failed", e)); 
+                });
+                arTarget.addEventListener('targetLost', () => { 
+                    video.pause(); 
+                });
+            });
+        </script>
+    <body>
+        <a-scene mindar-image="imageTargetSrc: ./resolucion.mind; autoStart: false; uiError:no; uiLoading:no; uiScanning:no;" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false" renderer="colorManagement: true;">
+            <a-assets>
+                <video id="ar-video" src="./resolucion.mp4" loop muted playsinline crossorigin="anonymous"></video>
+                
+            </a-assets>
+            
+            <a-camera position="0 0 0" look-controls="enabled: false" cursor="fuse: false; rayOrigin: mouse;" raycaster="near: 10; far: 10000; objects: .clickable"></a-camera>
+    
+            <a-entity id="ar-target" mindar-image-target="targetIndex: 0">
+                <a-plane
+                    src="#ar-video"
+                    position="0 0 0"
+                    rotation="0 0 0"
+                    height="1"
+                    width="1.4285714285714286"
+                ></a-plane>
+                
+            </a-entity>
+        </a-scene>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const arTarget = document.querySelector('#ar-target');
+                const video = document.querySelector('#ar-video');
+                arTarget.addEventListener('targetFound', () => { 
+                    video.play().catch(e => console.error("Video play failed", e)); 
+                });
+                arTarget.addEventListener('targetLost', () => { 
+                    video.pause(); 
+                });
+            });
+        </script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const sceneEl = document.querySelector('a-scene');
+            let arSystemRunning = false;
+            
+            sceneEl.addEventListener('loaded', function () {
+                const arSystem = sceneEl.systems['mindar-image-system'];
+                if (arSystem && arSystem.start && !arSystemRunning) {
+                    arSystem.start();
+                    arSystemRunning = true;
+                }
+                
             });
         });
     </script>
