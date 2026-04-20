@@ -2,185 +2,100 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Galería AR - Múltiples Obras</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galería AR Inmersiva</title>
+    <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
     <style>
-        body { margin: 0; overflow: hidden; font-family: sans-serif; }
-        #info {
-            position: absolute;
-            bottom: 20px;
-            left: 0;
-            right: 0;
-            text-align: center;
-            background: rgba(0,0,0,0.6);
-            color: white;
-            padding: 8px;
-            font-size: 14px;
-            pointer-events: none;
-            z-index: 10;
-        }
-        .ar-video-element {
-            position: absolute;
-            /* El tamaño y posición los controla MindAR */
-            object-fit: cover;
-            border-radius: 4px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.5);
-        }
+        body { margin: 0; overflow: hidden; }
     </style>
-    <!-- Cargar MindAR (versión JS pura, no A-Frame) -->
-    <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image.prod.js"></script>
 </head>
 <body>
-    <div id="info">🔍 Apunta la cámara a cualquiera de las obras</div>
+    <a-scene 
+        mindar-image="imageTargetSrc: ./galeria.mind; autoStart: true; uiLoading: no; uiError: no; uiScanning: no;" 
+        vr-mode-ui="enabled: false" 
+        device-orientation-permission-ui="enabled: false" 
+        renderer="colorManagement: true;">
+        
+        <a-assets>
+            <video id="vid-generaciones" src="./generaciones.mp4" loop muted playsinline crossorigin="anonymous"></video>
+            <video id="vid-abuela" src="./abuela.mp4" loop muted playsinline crossorigin="anonymous"></video>
+            <video id="vid-adn" src="./adn.mp4" loop muted playsinline crossorigin="anonymous"></video>
+            <video id="vid-ciencia" src="./ciencia.mp4" loop muted playsinline crossorigin="anonymous"></video>
+            <video id="vid-familia" src="./familia.mp4" loop muted playsinline crossorigin="anonymous"></video>
+            <video id="vid-garabatos" src="./garabatos.mp4" loop muted playsinline crossorigin="anonymous"></video>
+            <video id="vid-hermanas" src="./hermanas.mp4" loop muted playsinline crossorigin="anonymous"></video>
+            <video id="vid-hermanos" src="./hermanos.mp4" loop muted playsinline crossorigin="anonymous"></video>
+            <video id="vid-juicio" src="./juicio.mp4" loop muted playsinline crossorigin="anonymous"></video>
+            <video id="vid-regalo" src="./regalo.mp4" loop muted playsinline crossorigin="anonymous"></video>
+            <video id="vid-resolucion" src="./resolucion.mp4" loop muted playsinline crossorigin="anonymous"></video>
+        </a-assets>
+        
+        <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+
+        <a-entity mindar-image-target="targetIndex: 0" class="ar-target" data-video="#vid-generaciones">
+            <a-plane src="#vid-generaciones" position="0 0 0" height="1" width="1.77"></a-plane>
+        </a-entity>
+
+        <a-entity mindar-image-target="targetIndex: 1" class="ar-target" data-video="#vid-abuela">
+            <a-plane src="#vid-abuela" position="0 0 0" height="1" width="1.77"></a-plane>
+        </a-entity>
+
+        <a-entity mindar-image-target="targetIndex: 2" class="ar-target" data-video="#vid-adn">
+            <a-plane src="#vid-adn" position="0 0 0" height="1" width="1.77"></a-plane>
+        </a-entity>
+
+        <a-entity mindar-image-target="targetIndex: 3" class="ar-target" data-video="#vid-ciencia">
+            <a-plane src="#vid-ciencia" position="0 0 0" height="1" width="1.77"></a-plane>
+        </a-entity>
+
+        <a-entity mindar-image-target="targetIndex: 4" class="ar-target" data-video="#vid-familia">
+            <a-plane src="#vid-familia" position="0 0 0" height="1" width="1.77"></a-plane>
+        </a-entity>
+
+        <a-entity mindar-image-target="targetIndex: 5" class="ar-target" data-video="#vid-garabatos">
+            <a-plane src="#vid-garabatos" position="0 0 0" height="1" width="1.77"></a-plane>
+        </a-entity>
+
+        <a-entity mindar-image-target="targetIndex: 6" class="ar-target" data-video="#vid-hermanas">
+            <a-plane src="#vid-hermanas" position="0 0 0" height="1" width="1.77"></a-plane>
+        </a-entity>
+
+        <a-entity mindar-image-target="targetIndex: 7" class="ar-target" data-video="#vid-hermanos">
+            <a-plane src="#vid-hermanos" position="0 0 0" height="1" width="1.77"></a-plane>
+        </a-entity>
+
+        <a-entity mindar-image-target="targetIndex: 8" class="ar-target" data-video="#vid-juicio">
+            <a-plane src="#vid-juicio" position="0 0 0" height="1" width="1.77"></a-plane>
+        </a-entity>
+
+        <a-entity mindar-image-target="targetIndex: 9" class="ar-target" data-video="#vid-regalo">
+            <a-plane src="#vid-regalo" position="0 0 0" height="1" width="1.77"></a-plane>
+        </a-entity>
+
+        <a-entity mindar-image-target="targetIndex: 10" class="ar-target" data-video="#vid-resolucion">
+            <a-plane src="#vid-resolucion" position="0 0 0" height="1" width="1.77"></a-plane>
+        </a-entity>
+
+    </a-scene>
 
     <script>
-        // --------------------------------------------------------------
-        // 1. LISTA DE OBRAS (mindFile, videoFile)
-        //    Ajusta las rutas si están en subcarpetas
-        // --------------------------------------------------------------
-        const obras = [
-            { mind: "generaciones.mind", video: "generaciones.mp4" },
-            { mind: "abuela.mind", video: "abuela.mp4" },
-            { mind: "adn.mind", video: "adn.mp4" },
-            { mind: "ciencia.mind", video: "ciencia.mp4" },
-            { mind: "familia.mind", video: "familia.mp4" },
-            { mind: "garabatos.mind", video: "garabatos.mp4" },
-            { mind: "hermanas.mind", video: "hermanas.mp4" },
-            { mind: "hermanos.mind", video: "hermanos.mp4" },
-            { mind: "juicio.mind", video: "juicio.mp4" },
-            { mind: "regalo.mind", video: "regalo.mp4" },
-            { mind: "resolucion.mind", video: "resolucion.mp4" }
-        ];
-
-        // --------------------------------------------------------------
-        // 2. INICIALIZAR MINDAR CON MÚLTIPLES TARGETS
-        // --------------------------------------------------------------
-        const mindar = new MindAR.ImageTargetRunner({
-            container: document.body,          // El canvas se añade al body
-            autoStart: true,                  // Inicia la cámara automáticamente
-            filterMinCF: 0.005,               // Sensibilidad (ajústalo si es necesario)
-            filterBeta: 0.01,
-            missTolerance: 5,
-            uiScanning: false,                // Ocultar UI de escaneo
-            uiLoading: false,
-            uiError: false
-        });
-
-        // Almacenar los videos activos: clave = targetIndex, valor = { videoElement, divContainer }
-        const activeVideos = new Map();
-
-        // Función para cargar todos los targets .mind
-        async function cargarTodosLosTargets() {
-            for (let i = 0; i < obras.length; i++) {
-                const obra = obras[i];
-                try {
-                    // Cargar el archivo .mind (binario)
-                    const response = await fetch(obra.mind);
-                    const buffer = await response.arrayBuffer();
-                    // Añadir el target al motor de MindAR
-                    // El tercer parámetro es el ancho físico aproximado del marcador (en metros). Ponemos 0.3 (30cm)
-                    mindar.addImageTargets(buffer, [0.3]);
-                    console.log(`✅ Target cargado: ${obra.mind}`);
-                } catch (error) {
-                    console.error(`❌ Error cargando ${obra.mind}:`, error);
-                }
-            }
-            // Después de cargar todos, iniciar el procesamiento
-            await mindar.start();
-            console.log("🚀 MindAR iniciado. Escaneando...");
-        }
-
-        // --------------------------------------------------------------
-        // 3. MANEJAR DETECCIÓN Y PÉRDIDA DE TARGETS
-        // --------------------------------------------------------------
-        mindar.setCallbacks({
-            // Cuando se encuentra un target
-            targetFound: (targetId, targetIndex) => {
-                console.log(`🎯 Target encontrado: index=${targetIndex}, id=${targetId}`);
-                
-                // Evitar duplicados (por si se dispara varias veces)
-                if (activeVideos.has(targetIndex)) return;
-                
-                // Obtener la obra correspondiente (asumimos mismo orden que en 'obras')
-                const obra = obras[targetIndex];
-                if (!obra) {
-                    console.warn(`No hay obra definida para el targetIndex ${targetIndex}`);
-                    return;
-                }
-                
-                // Crear contenedor div que MindAR posicionará automáticamente
-                const container = mindar.createTargetContainer(targetIndex);
-                // container es un div que seguirá la posición 3D del marcador
-                
-                // Crear elemento de video
-                const video = document.createElement("video");
-                video.src = obra.video;
-                video.loop = true;
-                video.muted = false;     // Cambia a true si quieres silenciado
-                video.playsInline = true;
-                video.autoplay = false;
-                video.setAttribute("playsinline", "");
-                video.style.width = "100%";
-                video.style.height = "100%";
-                video.style.objectFit = "contain";
-                video.style.borderRadius = "8px";
-                video.style.boxShadow = "0 0 15px rgba(0,0,0,0.3)";
-                
-                // Ajustar tamaño del contenedor (ancho y alto en metros virtuales)
-                // El ancho será ~0.8m y la altura se ajusta al aspect ratio del video
-                container.style.width = "0.8m";
-                container.style.height = "0.6m"; // Proporcional 4:3, se recalculará al cargar metadata
-                container.style.background = "black";
-                container.style.borderRadius = "8px";
-                container.style.overflow = "hidden";
-                
-                container.appendChild(video);
-                
-                // Intentar reproducir cuando se pueda
-                video.play().catch(e => console.warn("Error reproduciendo video:", e));
-                
-                // Ajustar altura según aspect ratio del video cuando se cargue
-                video.addEventListener("loadedmetadata", () => {
-                    const aspect = video.videoWidth / video.videoHeight;
-                    // Mantener ancho 0.8, altura = ancho / aspect
-                    const newHeight = 0.8 / aspect;
-                    container.style.height = `${newHeight}m`;
-                });
-                
-                // Guardar referencia
-                activeVideos.set(targetIndex, { container, video, obra });
-            },
+        document.addEventListener('DOMContentLoaded', () => {
+            const targets = document.querySelectorAll('.ar-target');
             
-            // Cuando se pierde un target
-            targetLost: (targetId, targetIndex) => {
-                console.log(`👋 Target perdido: index=${targetIndex}`);
-                const active = activeVideos.get(targetIndex);
-                if (active) {
-                    // Pausar y limpiar el video
-                    active.video.pause();
-                    active.video.src = ""; // liberar recurso
-                    // Eliminar el contenedor del DOM
-                    if (active.container.parentNode) {
-                        active.container.parentNode.removeChild(active.container);
-                    }
-                    activeVideos.delete(targetIndex);
-                }
-            }
-        });
+            targets.forEach(target => {
+                const videoSelector = target.getAttribute('data-video');
+                const video = document.querySelector(videoSelector);
 
-        // --------------------------------------------------------------
-        // 4. INICIAR CARGA DE TARGETS Y ARRANCAR
-        // --------------------------------------------------------------
-        cargarTodosLosTargets().catch(err => {
-            console.error("Error fatal:", err);
-            document.getElementById("info").innerText = "❌ Error cargando los marcadores. Revisa la consola.";
-        });
+                target.addEventListener('targetFound', () => {
+                    video.play();
+                });
 
-        // Pequeña ayuda: mostrar en info cuántos targets se han cargado
-        setTimeout(() => {
-            const count = obras.length;
-            document.getElementById("info").innerHTML = `📱 ${count} obras cargadas. Apunta la cámara a cualquier marcador.`;
-        }, 1000);
+                target.addEventListener('targetLost', () => {
+                    video.pause();
+                });
+            });
+        });
     </script>
 </body>
 </html>
